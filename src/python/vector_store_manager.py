@@ -19,8 +19,8 @@ class TextFileVectorStore:
                         text = f.read()
                         # Split the text into chunks
                         text_splitter = RecursiveCharacterTextSplitter(
-                            chunk_size=1000,
-                            chunk_overlap=200,
+                            chunk_size=15000,
+                            chunk_overlap=300,
                             length_function=len
                         )
                         texts.extend(text_splitter.split_text(text))
