@@ -37,7 +37,6 @@ class DocumentQA:
     _current_model_index = 0  # Class variable to track current model index
 
     def __init__(self):
-        self.chat_history = []
         self.vector_store_manager = TextFileVectorStore()
         self.vector_store_manager.load_vector_store('src/python/vector_store-v4.faiss')
         self.llm = LLMClient(model_name=GROQ_SUPPORTED_MODELS[0]).llm
@@ -48,24 +47,16 @@ class DocumentQA:
         cls._current_model_index = (cls._current_model_index + 1) % len(GROQ_SUPPORTED_MODELS)
         return model
 
-    def ask_question(self, question: str) -> str:
+    def ask_question(self, question: str , history: str) -> str:
         documents  = self.vector_store_manager.fetch_data(query=question)
         context = "\n".join([document.page_content for document in documents])
-        #print(f"Context: {context}")
         system_context = f"You are a helpful assistant that can answer questions about the documents in the directory. use following context to answer the question: ```{context}``` If you don't know the answer, say 'I don't know'."
-        result = self.qa_chain.invoke({"question": question, "chat_history": self.chat_history, "system_context": system_context})
-        #print(f"LLM response - {result}")
+        result = self.qa_chain.invoke({"question": question, "chat_history": "", "system_context": system_context})
         answer = result["answer"]
-        #print(f"Answer: {answer}")
-        # Update chat history
-        self.chat_history.append((question, answer))
-        self.change_model()
+        self.change_model() 
+        if len(answer.split('</think>')) > 1:
+            answer = answer.split('</think>')[1]
         return answer
-        
-
-    def clear_chat_history(self):
-        """Clear the chat history"""
-        self.chat_history = []
 
     def change_model(self):    
         model_name = self._get_next_model()
