@@ -49,7 +49,7 @@ def create_gradio_interface():
 
 def main():
     interface = create_gradio_interface()
-    interface.launch(share=True)
+    interface.launch(pwa=True)
 
 if __name__ == "__main__":
     main()

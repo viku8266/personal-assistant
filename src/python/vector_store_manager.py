@@ -93,13 +93,3 @@ class TextFileVectorStore:
                         texts.extend(text_splitter.split_text(text))
         self.vector_store.add_texts(texts)
         print(f"Java files added to vector store from directory index text length  {len(texts)}")
-        
-
-
-
-
-# sample usage
-vector_store_manager = TextFileVectorStore()
-vector_store_manager.create_vector_store("/Users/vikasvashistha/github/personal-assistant/transcripts")
-vector_store_manager.add_java_files_to_vector_store("/Users/vikasvashistha/github/personal-assistant/code_files/paytm-disbursal-platform")
-vector_store_manager.save_vector_store("vector_store-v1.faiss")
